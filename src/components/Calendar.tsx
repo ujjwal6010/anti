@@ -4,7 +4,6 @@ import {
   ChevronRight,
   CalendarDays,
   X,
-  Check,
   Plus,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
