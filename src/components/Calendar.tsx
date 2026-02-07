@@ -46,7 +46,7 @@ const Calendar: React.FC = () => {
   }
 
   const daysInMonth = useMemo(() => {
-    const days = []
+    const days: (Date | null)[] = []
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1)
     const firstDayOfWeek = firstDayOfMonth.getDay()
     const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
