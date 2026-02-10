@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 import {
   ChevronLeft,
   ChevronRight,
@@ -46,7 +47,7 @@ const Calendar: React.FC = () => {
   }
 
   const daysInMonth = useMemo(() => {
-    const days = []
+    const days: (Date | null)[] = []
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1)
     const firstDayOfWeek = firstDayOfMonth.getDay()
     const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
@@ -91,12 +92,14 @@ const Calendar: React.FC = () => {
         <div className="flex space-x-2">
           <button
             onClick={handlePrevMonth}
+            aria-label="Previous month"
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
           >
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>
           <button
             onClick={handleNextMonth}
+            aria-label="Next month"
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
           >
             <ChevronRight className="w-5 h-5 text-gray-700" />
@@ -115,7 +118,7 @@ const Calendar: React.FC = () => {
       <div className="relative overflow-hidden">
         <AnimatePresence initial={false} custom={animationDirection}>
           <motion.div
-            key={currentMonth}
+            key={currentDate.toISOString()}
             custom={animationDirection}
             variants={variants}
             initial="enter"
@@ -129,7 +132,7 @@ const Calendar: React.FC = () => {
           >
             {daysInMonth.map((day, index) => (
               <div
-                key={index}
+                key={day ? day.toISOString() : `empty-${index}`}
                 className={`relative w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer transition-all duration-300
                   ${
                     day
@@ -158,55 +161,59 @@ const Calendar: React.FC = () => {
       </div>
 
       {/* Modal for selected date */}
-      <AnimatePresence>
-        {isModalOpen && selectedDate && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          >
-            <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
-              <button
-                onClick={handleCloseModal}
-                className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              <h3 className="text-xl font-semibold mb-4 text-gray-800">
-                Event for {selectedDate.toLocaleDateString()}
-              </h3>
-              <div className="space-y-4">
-                {/* Placeholder for events */}
-                <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-md border border-gray-200">
-                  <CalendarDays className="w-5 h-5 text-blue-500" />
-                  <div>
-                    <p className="font-medium text-gray-700">Team Meeting</p>
-                    <p className="text-sm text-gray-500">10:00 AM - 11:00 AM</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-md border border-gray-200">
-                  <CalendarDays className="w-5 h-5 text-green-500" />
-                  <div>
-                    <p className="font-medium text-gray-700">Project Deadline</p>
-                    <p className="text-sm text-gray-500">All Day</p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 flex justify-end">
+      {createPortal(
+        <AnimatePresence>
+          {isModalOpen && selectedDate && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+            >
+              <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
                 <button
-                  onClick={() => alert('Add new event functionality not implemented yet!')}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md"
+                  onClick={handleCloseModal}
+                  aria-label="Close modal"
+                  className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Event
+                  <X className="w-6 h-6" />
                 </button>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">
+                  Event for {selectedDate.toLocaleDateString()}
+                </h3>
+                <div className="space-y-4">
+                  {/* Placeholder for events */}
+                  <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-md border border-gray-200">
+                    <CalendarDays className="w-5 h-5 text-blue-500" />
+                    <div>
+                      <p className="font-medium text-gray-700">Team Meeting</p>
+                      <p className="text-sm text-gray-500">10:00 AM - 11:00 AM</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-md border border-gray-200">
+                    <CalendarDays className="w-5 h-5 text-green-500" />
+                    <div>
+                      <p className="font-medium text-gray-700">Project Deadline</p>
+                      <p className="text-sm text-gray-500">All Day</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={() => alert('Add new event functionality not implemented yet!')}
+                    className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Event
+                  </button>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </div>
   )
 }
