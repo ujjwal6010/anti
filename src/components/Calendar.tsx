@@ -92,12 +92,14 @@ const Calendar: React.FC = () => {
           <button
             onClick={handlePrevMonth}
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
+            aria-label="Previous Month"
           >
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>
           <button
             onClick={handleNextMonth}
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
+            aria-label="Next Month"
           >
             <ChevronRight className="w-5 h-5 text-gray-700" />
           </button>
@@ -171,6 +173,7 @@ const Calendar: React.FC = () => {
               <button
                 onClick={handleCloseModal}
                 className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                aria-label="Close Modal"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -198,6 +201,7 @@ const Calendar: React.FC = () => {
                 <button
                   onClick={() => alert('Add new event functionality not implemented yet!')}
                   className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md"
+                  aria-label="Add Event"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Event
