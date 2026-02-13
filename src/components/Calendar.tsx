@@ -46,7 +46,7 @@ const Calendar: React.FC = () => {
   }
 
   const daysInMonth = useMemo(() => {
-    const days = []
+    const days: (Date | null)[] = []
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1)
     const firstDayOfWeek = firstDayOfMonth.getDay()
     const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
@@ -91,12 +91,14 @@ const Calendar: React.FC = () => {
         <div className="flex space-x-2">
           <button
             onClick={handlePrevMonth}
+            aria-label="Previous month"
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
           >
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>
           <button
             onClick={handleNextMonth}
+            aria-label="Next month"
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
           >
             <ChevronRight className="w-5 h-5 text-gray-700" />
@@ -115,7 +117,7 @@ const Calendar: React.FC = () => {
       <div className="relative overflow-hidden">
         <AnimatePresence initial={false} custom={animationDirection}>
           <motion.div
-            key={currentMonth}
+            key={`${currentMonth}-${currentYear}`}
             custom={animationDirection}
             variants={variants}
             initial="enter"
@@ -130,6 +132,7 @@ const Calendar: React.FC = () => {
             {daysInMonth.map((day, index) => (
               <div
                 key={index}
+                aria-label={day ? day.toDateString() : undefined}
                 className={`relative w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer transition-all duration-300
                   ${
                     day
@@ -170,6 +173,7 @@ const Calendar: React.FC = () => {
             <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
               <button
                 onClick={handleCloseModal}
+                aria-label="Close modal"
                 className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
               >
                 <X className="w-6 h-6" />
