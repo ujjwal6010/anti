@@ -92,12 +92,14 @@ const Calendar: React.FC = () => {
           <button
             onClick={handlePrevMonth}
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
+            aria-label="Previous month"
           >
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>
           <button
             onClick={handleNextMonth}
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200"
+            aria-label="Next month"
           >
             <ChevronRight className="w-5 h-5 text-gray-700" />
           </button>
@@ -171,6 +173,7 @@ const Calendar: React.FC = () => {
               <button
                 onClick={handleCloseModal}
                 className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                aria-label="Close modal"
               >
                 <X className="w-6 h-6" />
               </button>
